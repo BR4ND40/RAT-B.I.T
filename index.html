@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta charset="UTF-8">
+<title>Relatório Técnico</title>
+
+<style>
+:root {
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --text: #1f2937;
+    --input: #ffffff;
+    --border: #cbd5e1;
+    --primary: #1d3557;
+    --danger: #e63946;
+    --success: #2a9d8f;
+}
+
+body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #e5e7eb;
+    --input: #0f172a;
+    --border: #334155;
+    --primary: #60a5fa;
+    --danger: #f87171;
+    --success: #34d399;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 25px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+label {
+    font-weight: 600;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--input);
+    color: var(--text);
+}
+
+input:invalid, textarea:invalid, select:invalid {
+    border-color: var(--danger);
+}
+
+textarea {
+    min-height: 90px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.gerar { background: var(--primary); color: white; }
+.limpar { background: var(--danger); color: white; }
+.copiar { background: var(--success); color: white; }
+
+#resultado {
+    margin-top: 20px;
+    background: var(--input);
+    padding: 15px;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    border: 1px solid var(--border);
+}
+
+.toggle {
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--primary);
+    color: white;
+}
+</style>
+</head>
+
+<body class="dark">
+
+<form class="container" onsubmit="event.preventDefault(); gerarRelatorio();">
+
+<div class="topbar">
+    <h2>Relatório Técnico</h2>
+    <div class="toggle" onclick="toggleTema()">🌙 / ☀️</div>
+</div>
+
+<div class="grid">
+    <div>
+        <label>LOCAL *</label>
+        <input id="local" required>
+    </div>
+    <div>
+        <label>WOT *</label>
+        <input id="wot" required>
+    </div>
+    <div>
+        <label>RESPONSÁVEL LOCAL *</label>
+        <input id="responsavel" required>
+    </div>
+    <div>
+        <label>FUNÇÃO *</label>
+        <input id="funcao" required>
+    </div>
+    <div>
+        <label>Status *</label>
+        <select id="status" required>
+            <option value="">Selecione</option>
+            <option value="Produtivo">Produtivo</option>
+            <option value="Improdutivo">Improdutivo</option>
+        </select>
+    </div>
+</div>
+
+<label>Problema Identificado *</label>
+<textarea id="problema" required placeholder="Um problema por linha"></textarea>
+
+<label>Solução Aplicada *</label>
+<textarea id="solucao" required placeholder="Uma ação por linha"></textarea>
+
+<div class="buttons">
+    <button class="gerar">Gerar</button>
+    <button type="button" class="copiar" onclick="copiarTexto()">Copiar</button>
+    <button type="button" class="limpar" onclick="limparFormulario()">Limpar</button>
+</div>
+
+<div id="resultado"></div>
+
+</form>
+
+<script>
+function toggleTema() {
+    document.body.classList.toggle("dark");
+}
+
+function formatarLista(texto) {
+    return texto
+        .split("\n")
+        .map(l => l.trim())
+        .filter(l => l)
+        .map(l => `- ${l}`)
+        .join("\n");
+}
+
+function gerarRelatorio() {
+    const campos = ["local","wot","responsavel","funcao","status","problema","solucao"];
+    for (let id of campos) {
+        if (!document.getElementById(id).value.trim()) {
+            alert("Preencha todos os campos obrigatórios.");
+            return;
+        }
+    }
+
+    const data = new Date().toLocaleString("pt-BR");
+
+    const texto =
+`DATA: ${data}
+
+LOCAL: ${local.value}
+WOT: ${wot.value}
+RESPONSÁVEL LOCAL: ${responsavel.value}
+FUNÇÃO: ${funcao.value}
+STATUS: ${status.value}
+
+Problema Identificado:
+${formatarLista(problema.value)}
+
+Solução Aplicada:
+${formatarLista(solucao.value)}`;
+
+    resultado.innerText = texto;
+}
+
+function copiarTexto() {
+    if (!resultado.innerText.trim()) {
+        alert("Gere o relatório antes de copiar.");
+        return;
+    }
+    navigator.clipboard.writeText(resultado.innerText);
+    alert("Relatório copiado!");
+}
+
+function limparFormulario() {
+    document.querySelectorAll("input, textarea, select").forEach(e => e.value = "");
+    resultado.innerText = "";
+}
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("Service Worker registrado"))
+        .catch(err => console.error("Erro no SW", err));
+}
+</script>
+</body>
+</html>
