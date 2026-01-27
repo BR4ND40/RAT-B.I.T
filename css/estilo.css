@@ -126,3 +126,59 @@ input[type="text"]{
 footer {
     text-align: center;
 }
+
+
+/* ============================= */
+/* 📱 AJUSTES PARA CELULAR */
+/* ============================= */
+@media (max-width: 768px) {
+
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    max-width: 100%;
+    width: 100%;
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  input,
+  select,
+  button {
+    width: 100%;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .toggle {
+    width: 100%;
+    text-align: center;
+  }
+
+  footer {
+    margin-top: 15px;
+    font-size: 0.85rem;
+  }
+}
