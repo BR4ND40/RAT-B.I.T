@@ -22,7 +22,7 @@
   </div>
 
   <!-- STEP 1 -->
-  <section class="step" data-step="1">
+  <section class="step">
     <h3>Identificação</h3>
 
     <div class="grid">
@@ -38,15 +38,16 @@
   </section>
 
   <!-- STEP 2 -->
-  <section class="step" data-step="2" style="display:none;">
+  <section class="step" style="display:none;">
     <h3>Descrição Técnica</h3>
 
     <h4>Problemas</h4>
     <div id="boxProblemas" class="box"></div>
 
     <input id="novoProblema" placeholder="Adicionar novo problema">
-    <button class="next" type="button" onclick="addCustom('problemas')">Adicionar problema</button>
-    <button class="next" type="button" onclick="addChecked('problemas')">Adicionar selecionados</button>
+    <button class="next" type="button" onclick="addCustom('problemas')">
+      Adicionar problema
+    </button>
 
     <ul id="listaProblemas" class="lista"></ul>
 
@@ -56,19 +57,20 @@
     <div id="boxSolucoes" class="box"></div>
 
     <input id="novaSolucao" placeholder="Adicionar nova solução">
-    <button class="next" type="button" onclick="addCustom('solucoes')">Adicionar solução</button>
-    <button class="next" type="button" onclick="addChecked('solucoes')">Adicionar selecionadas</button>
+    <button class="next" type="button" onclick="addCustom('solucoes')">
+      Adicionar solução
+    </button>
 
     <ul id="listaSolucoes" class="lista"></ul>
 
     <div class="buttons">
       <button class="back" type="button" onclick="prevStep()">Voltar</button>
-      <button class="next" type="button" onclick="validarStep2()">Próximo</button>
+      <button class="next" type="button" onclick="nextStep()">Próximo</button>
     </div>
   </section>
 
   <!-- STEP 3 -->
-  <section class="step" data-step="3" style="display:none;">
+  <section class="step" style="display:none;">
     <h3>Finalização</h3>
 
     <label>Status *</label>
@@ -97,12 +99,12 @@
 </footer>
 
 <!-- JS principal -->
-<script src="./js/relatorio.js"></script>
+<script src="./js/relatorio.js?v=fix"></script>
 
 <!-- Service Worker -->
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./js/service-worker.js')
+  navigator.serviceWorker.register('./js/service-worker.js');
 }
 </script>
 

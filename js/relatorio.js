@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   const steps = document.querySelectorAll(".step");
   let currentStep = 0;
 
-  const problemas = [];
-  const solucoes = [];
+  const listaProblemas = document.getElementById("listaProblemas");
+  const listaSolucoes = document.getElementById("listaSolucoes");
 
   function showStep(index) {
     steps.forEach((step, i) => {
@@ -26,86 +27,67 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // ===== TEMA =====
   window.toggleTema = function () {
     document.body.classList.toggle("dark");
   };
 
-  // ===== ADICIONAR ITEM DIGITADO =====
+  // ===== ADICIONAR ITEM =====
   window.addCustom = function (tipo) {
+    let input, lista;
+
     if (tipo === "problemas") {
-      const input = document.getElementById("novoProblema");
-      if (!input.value.trim()) return;
-
-      problemas.push(input.value.trim());
-      input.value = "";
-      renderLista("problemas");
+      input = document.getElementById("novoProblema");
+      lista = listaProblemas;
+    } else {
+      input = document.getElementById("novaSolucao");
+      lista = listaSolucoes;
     }
 
-    if (tipo === "solucoes") {
-      const input = document.getElementById("novaSolucao");
-      if (!input.value.trim()) return;
+    const texto = input.value.trim();
+    if (!texto) return;
 
-      solucoes.push(input.value.trim());
-      input.value = "";
-      renderLista("solucoes");
-    }
+    const li = document.createElement("li");
+    li.textContent = texto;
+
+    const btn = document.createElement("small");
+    btn.textContent = "✖";
+    btn.onclick = () => li.remove();
+
+    li.appendChild(btn);
+    lista.appendChild(li);
+
+    input.value = "";
   };
 
-  // ===== (placeholder) CHECKBOX =====
   window.addChecked = function () {
-    alert("Funcionalidade de checkboxes ainda não implementada.");
+    alert("Função de seleção ainda não implementada 🙂");
   };
 
-  // ===== RENDER LISTAS =====
-  function renderLista(tipo) {
-    const ul =
-      tipo === "problemas"
-        ? document.getElementById("listaProblemas")
-        : document.getElementById("listaSolucoes");
-
-    const dados = tipo === "problemas" ? problemas : solucoes;
-
-    ul.innerHTML = "";
-    dados.forEach((item, index) => {
-      const li = document.createElement("li");
-      li.textContent = `${index + 1}. ${item}`;
-      ul.appendChild(li);
-    });
-  }
-
-  // ===== STEP 2 =====
   window.validarStep2 = function () {
-    if (problemas.length === 0 || solucoes.length === 0) {
-      alert("Adicione pelo menos um problema e uma solução.");
-      return;
-    }
     nextStep();
   };
 
   // ===== RELATÓRIO =====
   window.gerarRelatorio = function () {
-    const texto = `
-LOCAL: ${document.getElementById("local").value}
-WOT: ${document.getElementById("wot").value}
-RESPONSÁVEL: ${document.getElementById("responsavel").value}
-FUNÇÃO: ${document.getElementById("funcao").value}
+    const problemas = [...listaProblemas.children].map(li => li.firstChild.textContent);
+    const solucoes = [...listaSolucoes.children].map(li => li.firstChild.textContent);
 
-PROBLEMAS:
-${problemas.map(p => "- " + p).join("\n")}
+    let texto = "RELATÓRIO TÉCNICO\n\n";
+    texto += "PROBLEMAS:\n";
+    problemas.forEach(p => texto += "- " + p + "\n");
 
-SOLUÇÕES:
-${solucoes.map(s => "- " + s).join("\n")}
+    texto += "\nSOLUÇÕES:\n";
+    solucoes.forEach(s => texto += "- " + s + "\n");
 
-STATUS: ${document.getElementById("status").value}
-    `;
-
-    document.getElementById("resultado").textContent = texto.trim();
+    document.getElementById("resultado").textContent = texto;
   };
 
   window.copiar = function () {
     navigator.clipboard.writeText(
       document.getElementById("resultado").textContent
     );
+    alert("Copiado!");
   };
 
   showStep(currentStep);
