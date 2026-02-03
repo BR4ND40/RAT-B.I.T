@@ -2,16 +2,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const steps = document.querySelectorAll(".step");
   let currentStep = 0;
 
+  const problemas = [];
+  const solucoes = [];
+
   function showStep(index) {
     steps.forEach((step, i) => {
       step.style.display = i === index ? "block" : "none";
     });
   }
 
-  /* =========================
-     NAVEGAÇÃO
-  ========================= */
-
+  // ===== NAVEGAÇÃO =====
   window.nextStep = function () {
     if (currentStep < steps.length - 1) {
       currentStep++;
@@ -26,76 +26,86 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  window.validarStep2 = function () {
-    nextStep();
-  };
-
-  /* =========================
-     TEMA
-  ========================= */
-
   window.toggleTema = function () {
     document.body.classList.toggle("dark");
   };
 
-  /* =========================
-     ADICIONAR PROBLEMAS / SOLUÇÕES
-  ========================= */
-
+  // ===== ADICIONAR ITEM DIGITADO =====
   window.addCustom = function (tipo) {
-    let input, lista;
-
     if (tipo === "problemas") {
-      input = document.getElementById("novoProblema");
-      lista = document.getElementById("listaProblemas");
-    } else {
-      input = document.getElementById("novaSolucao");
-      lista = document.getElementById("listaSolucoes");
+      const input = document.getElementById("novoProblema");
+      if (!input.value.trim()) return;
+
+      problemas.push(input.value.trim());
+      input.value = "";
+      renderLista("problemas");
     }
 
-    if (!input.value.trim()) return;
+    if (tipo === "solucoes") {
+      const input = document.getElementById("novaSolucao");
+      if (!input.value.trim()) return;
 
-    const li = document.createElement("li");
-    li.textContent = input.value;
-
-    lista.appendChild(li);
-    input.value = "";
+      solucoes.push(input.value.trim());
+      input.value = "";
+      renderLista("solucoes");
+    }
   };
 
-  window.addChecked = function (tipo) {
-    let box, lista;
+  // ===== (placeholder) CHECKBOX =====
+  window.addChecked = function () {
+    alert("Funcionalidade de checkboxes ainda não implementada.");
+  };
 
-    if (tipo === "problemas") {
-      box = document.getElementById("boxProblemas");
-      lista = document.getElementById("listaProblemas");
-    } else {
-      box = document.getElementById("boxSolucoes");
-      lista = document.getElementById("listaSolucoes");
-    }
+  // ===== RENDER LISTAS =====
+  function renderLista(tipo) {
+    const ul =
+      tipo === "problemas"
+        ? document.getElementById("listaProblemas")
+        : document.getElementById("listaSolucoes");
 
-    const checks = box.querySelectorAll("input[type=checkbox]:checked");
+    const dados = tipo === "problemas" ? problemas : solucoes;
 
-    checks.forEach(check => {
+    ul.innerHTML = "";
+    dados.forEach((item, index) => {
       const li = document.createElement("li");
-      li.textContent = check.value;
-      lista.appendChild(li);
-      check.checked = false;
+      li.textContent = `${index + 1}. ${item}`;
+      ul.appendChild(li);
     });
+  }
+
+  // ===== STEP 2 =====
+  window.validarStep2 = function () {
+    if (problemas.length === 0 || solucoes.length === 0) {
+      alert("Adicione pelo menos um problema e uma solução.");
+      return;
+    }
+    nextStep();
   };
 
-  /* =========================
-     RELATÓRIO FINAL
-  ========================= */
-
+  // ===== RELATÓRIO =====
   window.gerarRelatorio = function () {
-    const resultado = document.getElementById("resultado");
+    const texto = `
+LOCAL: ${document.getElementById("local").value}
+WOT: ${document.getElementById("wot").value}
+RESPONSÁVEL: ${document.getElementById("responsavel").value}
+FUNÇÃO: ${document.getElementById("funcao").value}
 
-    resultado.textContent = "Relatório gerado com sucesso.";
+PROBLEMAS:
+${problemas.map(p => "- " + p).join("\n")}
+
+SOLUÇÕES:
+${solucoes.map(s => "- " + s).join("\n")}
+
+STATUS: ${document.getElementById("status").value}
+    `;
+
+    document.getElementById("resultado").textContent = texto.trim();
   };
 
   window.copiar = function () {
-    const texto = document.getElementById("resultado").textContent;
-    navigator.clipboard.writeText(texto);
+    navigator.clipboard.writeText(
+      document.getElementById("resultado").textContent
+    );
   };
 
   showStep(currentStep);
