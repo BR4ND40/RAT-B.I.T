@@ -1,57 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
+  <title>Relatório Técnico</title>
 
-    <meta charset="UTF-8">
-    <title>Relatório Técnico</title>
-    <meta name="theme-color" content="#0f172a">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
 
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./css/estilo.css">
 </head>
 
-<header>
-
-</header>
-
 <body class="dark">
-    <div>
-    <nav>
 
-    <form class="container" onsubmit="event.preventDefault()">
+<form class="container" onsubmit="event.preventDefault()">
 
-    <div class="topbar">
-      <h2>Relatório Técnico</h2>
-      <div class="toggle" onclick="toggleTema()">🌙 / ☀️</div>
-    </div>
+  <div class="topbar">
+    <h2>Relatório Técnico</h2>
+    <div class="toggle" onclick="toggleTema()">🌙 / ☀️</div>
+  </div>
 
-    <!-- STEP 1 -->
-    <section class="step" data-step="1">
+  <!-- STEP 1 -->
+  <section class="step" data-step="1">
     <h3>Identificação</h3>
+
     <div class="grid">
       <div><label>Local *</label><input id="local"></div>
       <div><label>WOT *</label><input id="wot"></div>
       <div><label>Responsável *</label><input id="responsavel"></div>
       <div><label>Função *</label><input id="funcao"></div>
     </div>
-    <div class="buttons">
-      <button class="next" onclick="nextStep()">Próximo</button>
-    </div>
-    </section>
 
-    <!-- STEP 2 -->
-    <section class="step" data-step="2" style="display:none;">
+    <div class="buttons">
+      <button class="next" type="button" onclick="nextStep()">Próximo</button>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step" data-step="2" style="display:none;">
     <h3>Descrição Técnica</h3>
 
     <h4>Problemas</h4>
     <div id="boxProblemas" class="box"></div>
 
     <input id="novoProblema" placeholder="Adicionar novo problema">
-    <button class="next" onclick="addCustom('problemas')">Adicionar problema</button>
+    <button class="next" type="button" onclick="addCustom('problemas')">Adicionar problema</button>
+    <button class="next" type="button" onclick="addChecked('problemas')">Adicionar selecionados</button>
 
-    <button class="next" onclick="addChecked('problemas')">Adicionar selecionados</button>
     <ul id="listaProblemas" class="lista"></ul>
 
     <hr>
@@ -60,19 +56,19 @@
     <div id="boxSolucoes" class="box"></div>
 
     <input id="novaSolucao" placeholder="Adicionar nova solução">
-    <button class="next" onclick="addCustom('solucoes')">Adicionar solução</button>
+    <button class="next" type="button" onclick="addCustom('solucoes')">Adicionar solução</button>
+    <button class="next" type="button" onclick="addChecked('solucoes')">Adicionar selecionadas</button>
 
-    <button class="next" onclick="addChecked('solucoes')">Adicionar selecionadas</button>
     <ul id="listaSolucoes" class="lista"></ul>
 
     <div class="buttons">
-      <button class="back" onclick="prevStep()">Voltar</button>
-      <button class="next" onclick="validarStep2()">Próximo</button>
+      <button class="back" type="button" onclick="prevStep()">Voltar</button>
+      <button class="next" type="button" onclick="validarStep2()">Próximo</button>
     </div>
-    </section>
+  </section>
 
-    <!-- STEP 3 -->
-    <section class="step" data-step="3" style="display:none;">
+  <!-- STEP 3 -->
+  <section class="step" data-step="3" style="display:none;">
     <h3>Finalização</h3>
 
     <label>Status *</label>
@@ -83,28 +79,32 @@
     </select>
 
     <div class="buttons">
-      <button class="back" onclick="prevStep()">Voltar</button>
-      <button class="next" onclick="gerarRelatorio()">Gerar Relatório</button>
+      <button class="back" type="button" onclick="prevStep()">Voltar</button>
+      <button class="next" type="button" onclick="gerarRelatorio()">Gerar Relatório</button>
     </div>
 
     <pre id="resultado"></pre>
 
     <div class="buttons">
-      <button class="copy" onclick="copiar()">Copiar</button>
+      <button class="copy" type="button" onclick="copiar()">Copiar</button>
     </div>
-    </section>
+  </section>
 
-    </form>
+</form>
 
-    </nav>
+<footer id="footer">
+  &copy; 2026 B.I.T soluções em T.I
+</footer>
 
-        <!--Rodape-->
-        
-        <footer id="footer">
-            &copy; Copyright 2026 B.I.T soluções em T.I
-        </footer>
+<!-- JS principal -->
+<script src="./js/relatorio.js"></script>
 
-    </div>
+<!-- Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./js/service-worker.js')
+}
+</script>
 
 </body>
 </html>
